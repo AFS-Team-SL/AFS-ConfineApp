@@ -1,8 +1,13 @@
 import axios from 'axios';
 
+// Get base URL from environment variable, fallback to relative path for development
+const getBaseURL = () => {
+  return import.meta.env.VITE_AUTH_API_URL || '/api/auth';
+};
+
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: '/api/auth',
+  baseURL: getBaseURL(),
   timeout: 15000, // Increased timeout
   headers: {
     'Content-Type': 'application/json',

@@ -134,7 +134,8 @@ const EditModal = ({
       formData.append('image', file);
       formData.append('orderId', editingForm._id || editingForm.id || `temp-${Date.now()}`);
       
-      const response = await fetch('/api/workorder/upload-image', {
+      const uploadUrl = `${import.meta.env.VITE_WORKORDER_API_URL || '/api/workorder'}/upload-image`;
+      const response = await fetch(uploadUrl, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

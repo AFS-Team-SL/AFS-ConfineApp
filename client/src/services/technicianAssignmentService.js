@@ -1,13 +1,17 @@
 import axios from 'axios';
 
+// Get base URLs from environment variables, fallback to relative paths for development
+const getAuthBaseURL = () => import.meta.env.VITE_AUTH_API_URL || '/api/auth';
+const getLocationBaseURL = () => import.meta.env.VITE_LOCATION_API_URL || '/api/location';
+
 // Create axios instance for auth service (where users/technicians are managed)
 const authAxios = axios.create({
-  baseURL: '/api/auth',
+  baseURL: getAuthBaseURL(),
 });
 
 // Create axios instance for location service
 const locationAxios = axios.create({
-  baseURL: '/api/location',
+  baseURL: getLocationBaseURL(),
 });
 
 // Add token to requests
@@ -414,7 +418,7 @@ export const technicianAssignmentService = {
       // Note: This assumes work orders are accessible via the work order API
       // You may need to adjust the endpoint and filtering logic
       const workOrderAxios = axios.create({
-        baseURL: '/api/workorder',
+        baseURL: import.meta.env.VITE_WORKORDER_API_URL || '/api/workorder',
       });
       workOrderAxios.interceptors.request.use(addAuthHeader);
 
@@ -462,7 +466,7 @@ export const technicianAssignmentService = {
   async updateTaskStatus(taskId, newStatus) {
     try {
       const workOrderAxios = axios.create({
-        baseURL: '/api/workorder',
+        baseURL: import.meta.env.VITE_WORKORDER_API_URL || '/api/workorder',
       });
       workOrderAxios.interceptors.request.use(addAuthHeader);
 

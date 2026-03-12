@@ -42,6 +42,7 @@ app.use(compression());
 app.use(morgan('combined'));
 app.use(cors({
   origin: [
+    'https://afsnexsus.agilefacilities.com',
     process.env.FRONTEND_URL || 'http://localhost:3000',
     'http://localhost:3000',
     'http://localhost:5173',

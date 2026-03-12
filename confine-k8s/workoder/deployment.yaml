@@ -27,7 +27,7 @@ spec:
 
         # CORS / Frontend
         - name: CLIENT_URL
-          value: "https://devapp.agilefacilities.com"
+          value: "https://afsnexsus.agilefacilities.com"
 
         # JWT
         - name: JWT_EXPIRES_IN

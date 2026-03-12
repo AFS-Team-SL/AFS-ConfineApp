@@ -1,13 +1,17 @@
 import axios from 'axios';
 
+// Get base URLs from environment variables
+const getLocationBaseURL = () => import.meta.env.VITE_LOCATION_API_URL || '/api/location';
+const getAuthBaseURL = () => import.meta.env.VITE_AUTH_API_URL || '/api/auth';
+
 // Create axios instance for location service
 const locationAxios = axios.create({
-  baseURL: '/api/location',
+  baseURL: getLocationBaseURL(),
 });
 
 // Create axios instance for auth service
 const authAxios = axios.create({
-  baseURL: '/api/auth',
+  baseURL: getAuthBaseURL(),
 });
 
 // Add token to requests

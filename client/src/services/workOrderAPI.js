@@ -1,7 +1,8 @@
 // Work Order API Service
 class WorkOrderAPI {
   constructor() {
-    this.baseURL = '/api/workorder';
+    // Get base URL from environment variable, fallback to relative path for development
+    this.baseURL = import.meta.env.VITE_WORKORDER_API_URL || '/api/workorder';
   }
 
   // Helper method to get auth headers

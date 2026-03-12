@@ -311,9 +311,10 @@ const TechnicianForm = () => {
       formData.append('image', file);
       formData.append('orderId', `temp-${Date.now()}`); // Temporary ID until order is created
       
-      console.log('Uploading to:', '/api/workorder/upload-image');
+      const uploadUrl = `${import.meta.env.VITE_WORKORDER_API_URL || '/api/workorder'}/upload-image`;
+      console.log('Uploading to:', uploadUrl);
       
-      const response = await fetch('/api/workorder/upload-image', {
+      const response = await fetch(uploadUrl, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -612,7 +613,8 @@ const TechnicianForm = () => {
       console.log('Submitting confined space assessment:', JSON.stringify(submitData, null, 2));
 
       // Use the workOrderAPI service for consistency
-      const response = await fetch('/api/workorder/orders', {
+      const createUrl = `${import.meta.env.VITE_WORKORDER_API_URL || '/api/workorder'}/orders`;
+      const response = await fetch(createUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

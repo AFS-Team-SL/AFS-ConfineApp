@@ -44,9 +44,10 @@ app.use(compression());
 // CORS configuration
 app.use(cors({
   origin: [
+    'https://afsnexsus.agilefacilities.com',
     process.env.CLIENT_URL || 'http://localhost:3000',
     'http://localhost:3000',
-    'http://localhost:3001',
+    'http://localhost:5173',
     'http://localhost',
     'http://localhost:80'
   ],

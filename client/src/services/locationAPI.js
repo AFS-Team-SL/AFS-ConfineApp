@@ -1,8 +1,13 @@
 import axios from 'axios';
 
+// Get base URL from environment variable, fallback to relative path for development
+const getBaseURL = () => {
+  return import.meta.env.VITE_LOCATION_API_URL || '/api/location';
+};
+
 // Create axios instance for location management service
 const locationAPI = axios.create({
-  baseURL: '/api/location',
+  baseURL: getBaseURL(),
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -111,7 +116,7 @@ export const technicianAssignmentService = {
     try {
       // This should call the auth service to get technicians
       const authAPI = axios.create({
-        baseURL: '/api/auth',
+        baseURL: import.meta.env.VITE_AUTH_API_URL || '/api/auth',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
