@@ -102,5 +102,3 @@ jobs:
     - name: Deploy to AKS
       run: |
         find confine-k8s/ -type f -name "*.yaml" -exec kubectl apply -f {} \;
-
-
