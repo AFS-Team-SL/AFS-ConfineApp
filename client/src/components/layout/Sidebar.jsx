@@ -43,7 +43,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
   const [workOrders, setWorkOrders] = useState([]);
   const [tasksLoading, setTasksLoading] = useState(false);
   const [showTasksSection, setShowTasksSection] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -412,7 +411,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
             closeMobileMenu && closeMobileMenu();
           }
         }}
-        className={`bg-white shadow-2xl border-r border-gray-100 flex flex-col ${
+        className={`sidebar-surface flex flex-col ${
           isMobile
             ? `fixed inset-y-0 left-0 z-50 h-full w-[80vw] sm:w-[75vw] max-w-[280px] sm:max-w-[300px] transition-transform duration-300 ease-in-out ${
                 isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -434,122 +433,56 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
           />
         </div>
       )}
-      {/* Header - Professional & Mobile-Responsive */}
-      <div className="relative px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-5 lg:px-6 lg:py-6 border-b border-white/10 bg-gradient-to-br from-[#1a1a3e] via-[#232249] to-[#2a2a5e] shadow-2xl overflow-hidden">
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-pink-600/5 opacity-50" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
-        
-        {/* Content Container */}
-        <div className="relative flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
-          {/* Left Side: Logo & Brand */}
+      {/* Header - Mobile-First */}
+      <div className="sidebar-header">
+        <div className="sidebar-header-inner">
           <AnimatePresence mode="wait">
             {!isCollapsed && (
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                className="flex items-center gap-3 flex-1 min-w-0"
+                exit={{ opacity: 0, x: -16 }}
+                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                className="sidebar-brand"
               >
-                {/* Logo Container - Glass Morphism */}
-                <motion.div 
-                  className="relative h-10 w-10 sm:h-12 sm:w-12 md:h-13 md:w-13 lg:h-14 lg:w-14 bg-white/10 backdrop-blur-xl rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/20 shadow-xl flex-shrink-0 overflow-hidden"
-                  whileHover={{ scale: 1.05, rotate: 5 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {/* Gradient Shine Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" />
-                  <img 
-                    src="/logo.jpg" 
-                    alt="Confine Logo" 
-                    className="relative h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 object-contain drop-shadow-lg z-10"
-                  />
-                </motion.div>
-                
-                {/* Brand Text */}
-                <div className="flex-1 min-w-0">
-                  <motion.h1 
-                    className="text-lg sm:text-xl md:text-2xl font-extrabold text-white truncate tracking-tight leading-none"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    Confine
-                  </motion.h1>
-                  <motion.p 
-                    className="text-xs sm:text-xs md:text-sm text-white/70 font-medium truncate mt-0.5"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    Management System
-                  </motion.p>
+                <div className="sidebar-logo">
+                  <img src="/logo.jpg" alt="Confine" />
+                </div>
+                <div className="sidebar-brand-text">
+                  <span className="sidebar-brand-title">Confine OS</span>
+                  <span className="sidebar-brand-subtitle">Operations Suite</span>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
-          
-          {/* Right Side: Action Buttons */}
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+
+          <div className="sidebar-header-actions">
             {isMobile ? (
-              /* Mobile: Large Close Button (X) - Enhanced */
               <motion.button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   closeMobileMenu && closeMobileMenu();
                 }}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.92 }}
-                className="group relative p-3 sm:p-3.5 md:p-4 rounded-xl sm:rounded-2xl bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 backdrop-blur-xl transition-all duration-200 touch-manipulation min-w-[48px] min-h-[48px] sm:min-w-[50px] sm:min-h-[50px] md:min-w-[52px] md:min-h-[52px] flex items-center justify-center ring-2 ring-red-400/40 hover:ring-red-400/60 shadow-2xl hover:shadow-red-500/50 cursor-pointer"
+                whileTap={{ scale: 0.94 }}
+                className="sidebar-action-btn danger"
                 aria-label="Close navigation menu"
-                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
-                {/* Pulsing Background */}
-                <motion.div 
-                  className="absolute inset-0 rounded-xl sm:rounded-2xl bg-red-500/30"
-                  animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                />
-                
-                {/* X Icon - Large & Bold */}
-                <motion.div
-                  animate={{ rotate: [0, 180, 360] }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <X className="h-6 w-6 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white drop-shadow-2xl" strokeWidth={3} />
-                </motion.div>
-                
-                {/* Close Text Hint */}
-                <div className="absolute -bottom-6 sm:-bottom-8 left-1/2 -translate-x-1/2 bg-black/90 text-white text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
-                  Tap to close
-                </div>
+                <X className="h-5 w-5" strokeWidth={2.5} />
               </motion.button>
             ) : (
-              /* Desktop: Collapse Toggle Button (Chevron) */
               <motion.button
                 type="button"
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group relative p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/25 backdrop-blur-xl transition-all duration-300 min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center ring-1 ring-white/20 hover:ring-white/30 shadow-lg hover:shadow-xl"
+                whileTap={{ scale: 0.94 }}
+                className="sidebar-action-btn"
                 aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               >
-                {/* Button Glow Effect */}
-                <div className="absolute inset-0 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
-                {/* Chevron Icon with Smooth Transition */}
-                <motion.div
-                  animate={{ rotate: isCollapsed ? 0 : 180 }}
-                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                >
-                  {isCollapsed ? (
-                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-white drop-shadow-md" strokeWidth={2.5} />
-                  ) : (
-                    <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5 text-white drop-shadow-md" strokeWidth={2.5} />
-                  )}
-                </motion.div>
+                {isCollapsed ? (
+                  <ChevronRight className="h-4 w-4" strokeWidth={2.5} />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" strokeWidth={2.5} />
+                )}
               </motion.button>
             )}
           </div>
@@ -557,36 +490,32 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
       </div>
 
       {/* User Profile - Enhanced Mobile */}
-      <div className="p-3 sm:p-4 md:p-5 lg:p-6 border-b border-gray-100 bg-gradient-to-br from-gray-50 via-white to-gray-50/50">
-        <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
-          <div className="h-11 w-11 sm:h-12 sm:w-12 md:h-13 md:w-13 lg:h-14 lg:w-14 bg-gradient-to-br from-[#232249] to-[#232249]/80 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-[#232249]/20">
-            <UserCog className="h-5 w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 lg:h-7 lg:w-7 text-white" />
-          </div>
-          <AnimatePresence>
-            {!isCollapsed && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-                className="flex-1 min-w-0"
-              >
-                <p className="text-xs sm:text-sm md:text-sm font-bold text-[#232249] truncate">
-                  {user.firstName} {user.lastName}
-                </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-semibold bg-[#232249] text-white">
-                    {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                  </span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+      <div className="sidebar-user">
+        <div className="sidebar-user-avatar">
+          <UserCog className="h-5 w-5 text-white" />
         </div>
+        <AnimatePresence>
+          {!isCollapsed && (
+            <motion.div
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.2 }}
+              className="sidebar-user-meta"
+            >
+              <p className="sidebar-user-name">
+                {user.firstName} {user.lastName}
+              </p>
+              <span className="sidebar-user-role">
+                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Enhanced Navigation Menu with Mobile Optimization */}
-      <nav className="flex-1 px-2 sm:px-3 md:px-3 lg:px-4 py-3 sm:py-4 md:py-5 lg:py-6 space-y-1 sm:space-y-1.5 md:space-y-2 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 scrollbar-thumb-rounded-full">
+      <nav className="sidebar-nav">
         {menuItems.map((item, index) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
@@ -597,8 +526,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05, duration: 0.3, ease: "easeOut" }}
-              onHoverStart={() => setHoveredItem(item.path)}
-              onHoverEnd={() => setHoveredItem(null)}
             >
               <Link
                 to={item.path}
@@ -607,31 +534,16 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
                     closeMobileMenu();
                   }
                 }}
-                className={`flex items-center gap-2 sm:gap-2.5 md:gap-3 px-3 sm:px-3.5 md:px-4 py-3 sm:py-3 md:py-3.5 rounded-xl sm:rounded-xl md:rounded-2xl transition-all duration-200 group touch-manipulation relative overflow-hidden ${
-                  isActive
-                    ? 'bg-gradient-to-r from-[#232249] to-[#2a2a5e] text-white shadow-xl shadow-[#232249]/20 scale-[1.02]'
-                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-[#232249]/5 hover:to-[#232249]/10 hover:text-[#232249] active:scale-95 active:bg-[#232249]/15'
-                } ${isMobile ? 'min-h-[52px]' : 'min-h-[44px] sm:min-h-[46px] md:min-h-[48px]'}`}
+                className={`sidebar-link ${isActive ? 'sidebar-link-active' : ''}`}
               >
-                {/* Icon Container - Enhanced */}
-                <motion.div 
-                  className={`p-2 sm:p-2 md:p-2.5 rounded-lg sm:rounded-xl ${isActive ? 'bg-white/20 shadow-lg ring-2 ring-white/30' : 'bg-gradient-to-br from-gray-100 to-gray-50 group-hover:from-[#232249]/10 group-hover:to-[#232249]/5 shadow-sm'} transition-all duration-200 flex-shrink-0 relative overflow-hidden`}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.9, rotate: -5 }}
+                <motion.div
+                  className="sidebar-link-icon"
+                  whileHover={{ scale: 1.06 }}
+                  whileTap={{ scale: 0.94 }}
                 >
-                  <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${isActive ? 'text-white drop-shadow-md' : 'text-[#232249] group-hover:text-[#232249]'} transition-all duration-200`} strokeWidth={2.5} />
-                  
-                  {/* Icon glow effect - Enhanced */}
-                  {(isActive || hoveredItem === item.path) && (
-                    <motion.div 
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400/30 to-purple-400/30"
-                      animate={{ opacity: [0.3, 0.6, 0.3] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                  )}
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.4} />
                 </motion.div>
                 
-                {/* Label with smooth animation */}
                 <AnimatePresence>
                   {!isCollapsed && (
                     <motion.div
@@ -639,45 +551,14 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="flex-1 min-w-0"
+                      className="sidebar-link-label"
                     >
-                      <span className="text-xs sm:text-sm md:text-sm font-semibold truncate block">
+                      <span className="sidebar-link-text">
                         {item.label}
                       </span>
-                      
-                      {/* Active indicator - Enhanced */}
-                      {isActive && (
-                        <motion.div
-                          className="h-1 bg-gradient-to-r from-white/60 via-white to-white/60 rounded-full mt-1.5 shadow-lg shadow-white/20"
-                          initial={{ width: 0, opacity: 0 }}
-                          animate={{ width: '100%', opacity: 1 }}
-                          transition={{ delay: 0.1, duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-                        />
-                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
-                
-                {/* Hover ripple effect */}
-                {hoveredItem === item.path && !isActive && (
-                  <motion.div
-                    className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#232249]/5 to-[#232249]/10"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-                
-                {/* Active background animation */}
-                {isActive && (
-                  <motion.div
-                    className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  />
-                )}
               </Link>
             </motion.div>
           );
@@ -687,7 +568,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
       {/* Technician Tasks Section removed: Assigned Location tab hidden for technicians */}
 
       {/* Enhanced Logout Button - Premium Mobile */}
-      <div className="p-3 sm:p-3 md:p-3 lg:p-4 border-t border-gray-100 bg-gradient-to-br from-gray-50 via-white to-gray-50/50">
+      <div className="sidebar-footer">
         <motion.button
           type="button"
           onClick={() => {
@@ -698,25 +579,16 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
           }}
           whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.96 }}
-          className={`flex items-center gap-2 sm:gap-2.5 md:gap-3 w-full px-3 sm:px-3.5 md:px-4 py-3 sm:py-3 md:py-3.5 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 rounded-xl sm:rounded-xl md:rounded-2xl transition-all duration-200 group hover:shadow-lg hover:shadow-red-500/10 touch-manipulation relative overflow-hidden ${isMobile ? 'min-h-[52px]' : 'min-h-[44px] sm:min-h-[46px] md:min-h-[48px]'}`}
+          className="sidebar-logout"
         >
-          {/* Icon container - Enhanced */}
           <motion.div 
-            className="p-2 sm:p-2 md:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-br from-red-100 to-red-50 group-hover:from-red-200 group-hover:to-red-100 transition-all duration-200 flex-shrink-0 relative overflow-hidden shadow-sm group-hover:shadow-md"
-            whileHover={{ scale: 1.1, rotate: -10 }}
-            whileTap={{ scale: 0.9, rotate: 10 }}
+            className="sidebar-logout-icon"
+            whileHover={{ scale: 1.05, rotate: -6 }}
+            whileTap={{ scale: 0.92, rotate: 6 }}
           >
             <LogOut className="h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200" strokeWidth={2.5} />
-            
-            {/* Icon glow effect - Animated */}
-            <motion.div 
-              className="absolute inset-0 rounded-xl bg-gradient-to-br from-red-400/30 to-pink-400/30"
-              animate={{ opacity: [0, 0.5, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
           </motion.div>
           
-          {/* Label with enhanced animation */}
           <AnimatePresence>
             {!isCollapsed && (
               <motion.div
@@ -724,25 +596,17 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false, isMobileMenuOp
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2 }}
-                className="flex-1 min-w-0 text-left"
+                className="sidebar-logout-label"
               >
-                <span className="text-xs sm:text-sm md:text-sm font-semibold block">
+                <span className="sidebar-logout-title">
                   Logout
                 </span>
-                <span className="text-xs text-red-500/70 group-hover:text-red-600 transition-colors duration-300">
+                <span className="sidebar-logout-subtitle">
                   Sign out safely
                 </span>
               </motion.div>
             )}
           </AnimatePresence>
-          
-          {/* Hover ripple effect */}
-          <motion.div
-            className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-          />
         </motion.button>
       </div>
       </motion.div>

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from './Sidebar';
 import { useAuth } from '../../contexts/AuthContext';
 import { Menu, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 const Layout = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -13,6 +14,7 @@ const Layout = ({ children }) => {
   const [touchEnd, setTouchEnd] = useState(null);
   const [showMenuHint, setShowMenuHint] = useState(true);
   const { user } = useAuth();
+  const location = useLocation();
 
   // Detect mobile screen size - Lower breakpoint for better mobile detection
   useEffect(() => {
@@ -75,10 +77,19 @@ const Layout = ({ children }) => {
   // Only show sidebar for roles that need it
   const showSidebar = ['admin', 'manager', 'technician'].includes(user?.role);
 
+  const pageTitle = useMemo(() => {
+    const pathParts = location.pathname.split('/').filter(Boolean);
+    if (!pathParts.length) return 'Overview';
+    const last = pathParts[pathParts.length - 1]
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+    return last || 'Overview';
+  }, [location.pathname]);
+
   if (!showSidebar) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="w-full">
+      <div className="app-shell min-h-screen">
+        <div className="content-surface">
           {children}
         </div>
       </div>
@@ -86,85 +97,66 @@ const Layout = ({ children }) => {
   }
 
   return (
-    <div className="h-screen bg-gray-50 overflow-hidden overflow-x-hidden relative">
-      {/* Mobile Top Navbar with Hamburger Menu */}
-      {isMobile && (
-        <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm" style={{ pointerEvents: 'auto' }}>
-          <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3">
-            {/* Hamburger Menu Button - Simplified & Reliable */}
-            <motion.button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log('[Layout] Hamburger clicked, forcing open menu');
-                setIsMobileMenuOpen(true);
-              }}
-              className="mobile-menu-btn p-3 sm:p-3.5 bg-gradient-to-br from-gray-50 to-white rounded-lg sm:rounded-xl shadow-md border border-gray-200/50 touch-manipulation overflow-hidden z-50 min-w-[48px] min-h-[48px] sm:min-w-[52px] sm:min-h-[52px] cursor-pointer flex items-center justify-center"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto' }}
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            >
-              {/* Simple icon - no rotation animation to avoid complexity */}
-              <div className="flex items-center justify-center">
+    <div className="app-shell h-screen overflow-hidden">
+      <header className="app-header">
+        <div className="app-header-inner">
+          <div className="flex items-center gap-2">
+            {isMobile && (
+              <motion.button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMobileMenuOpen(true);
+                }}
+                className="header-icon-btn"
+                whileTap={{ scale: 0.96 }}
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              >
                 {isMobileMenuOpen ? (
-                  <X className="h-6 w-6 sm:h-7 sm:w-7 text-gray-700" />
+                  <X className="h-5 w-5" />
                 ) : (
-                  <Menu className="h-6 w-6 sm:h-7 sm:w-7 text-gray-700" />
+                  <Menu className="h-5 w-5" />
                 )}
+                {showMenuHint && !isMobileMenuOpen && (
+                  <span className="menu-hint-ring" aria-hidden="true" />
+                )}
+              </motion.button>
+            )}
+
+            <div className="brand-pill">
+              <img src="/logo.jpg" alt="Confine" className="brand-mark" />
+              <div className="brand-text">
+                <span className="brand-title">Confine OS</span>
+                <span className="brand-subtitle">Agile Facilities</span>
               </div>
-              
-              {/* Pulse indicator for first time users */}
-              {showMenuHint && !isMobileMenuOpen && (
-                <div className="absolute -inset-1 rounded-xl border-2 border-blue-400/30 animate-pulse"></div>
-              )}
-            </motion.button>
+            </div>
+          </div>
 
-            {/* App Title/Logo */}
-            <motion.div 
-              className="flex items-center gap-1.5 sm:gap-2 flex-1 justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <img 
-                src="/logo.jpg" 
-                alt="Confine Logo" 
-                className="h-7 w-7 sm:h-8 sm:w-8 object-contain flex-shrink-0"
-              />
-              <h1 className="text-base sm:text-lg font-bold text-gray-800 truncate">Confine</h1>
-            </motion.div>
-
-            {/* Spacer for balance */}
-            <div className="w-12 sm:w-10 flex-shrink-0"></div>
+          <div className="header-meta">
+            <div className="header-title">
+              <span className="header-title-label">{pageTitle}</span>
+              <span className="header-title-sub">{user?.role || 'User'} workspace</span>
+            </div>
+            <div className="header-user">
+              <span className="header-user-name">{user?.firstName} {user?.lastName}</span>
+              <span className="header-user-role">{user?.role}</span>
+            </div>
           </div>
         </div>
-      )}
+      </header>
 
-      {/* Mobile Backdrop Overlay - REMOVED: Handled by Sidebar component */}
-
-      {/* Main Layout Container */}
-      <div className={`h-full ${isMobile ? 'pt-[60px] sm:pt-[68px]' : 'flex'}`}>
-        {/* Sidebar - Different positioning for Mobile vs Desktop */}
+      <div className={`app-body ${isMobile ? 'app-body-mobile' : 'app-body-desktop'}`}>
         {isMobile ? (
-          /* Mobile: Fixed positioning handled by Sidebar component */
           <Sidebar
             isCollapsed={false}
             setIsCollapsed={setIsCollapsed}
             isMobile={true}
             isMobileMenuOpen={isMobileMenuOpen}
-            closeMobileMenu={() => {
-              console.log('[Layout] Closing mobile menu');
-              setIsMobileMenuOpen(false);
-            }}
+            closeMobileMenu={() => setIsMobileMenuOpen(false)}
           />
         ) : (
-          /* Desktop: Flex item in layout */
           <div className="flex-shrink-0 h-full">
-            <Sidebar 
+            <Sidebar
               isCollapsed={isCollapsed}
               setIsCollapsed={setIsCollapsed}
               isMobile={isMobile}
@@ -173,45 +165,45 @@ const Layout = ({ children }) => {
             />
           </div>
         )}
-        
-        {/* Main Content Area - Full Width on Mobile, Flex-1 on Desktop */}
+
         <motion.div
           initial={false}
-          className={`h-full overflow-y-auto overflow-x-hidden relative ${
-            isMobile ? 'w-full z-0' : 'flex-1 z-0'
-          }`}
+          className={`app-content ${isMobile ? 'w-full' : 'flex-1'}`}
           onTouchStart={isMobile ? handleTouchStart : undefined}
           onTouchMove={isMobile ? handleTouchMove : undefined}
           onTouchEnd={isMobile ? handleTouchEnd : undefined}
-          style={{ pointerEvents: 'auto' }}
         >
-          <main className={`w-full ${isMobile ? 'pb-3 sm:pb-4' : 'pb-6'}`}>
-            {/* Content with smooth fade in animation */}
+          <main className="content-surface">
             <motion.div
               key={children?.key || 'main-content'}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="w-full px-2 sm:px-0"
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="content-pad"
             >
               {children}
             </motion.div>
           </main>
-          
-          {/* Mobile Navigation Hint */}
+
+          <footer className="app-footer">
+            <div className="footer-inner">
+              <span>Confine OS</span>
+              <span className="footer-dot" />
+              <span>Operational safety suite</span>
+            </div>
+          </footer>
+
           {isMobile && showMenuHint && !isMobileMenuOpen && (
             <motion.div
-              className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none px-2"
+              className="menu-hint"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              transition={{ delay: 1, duration: 0.5 }}
+              transition={{ delay: 1, duration: 0.4 }}
             >
-              <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg border border-gray-200/50 flex items-center gap-1.5 sm:gap-2">
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full animate-pulse flex-shrink-0"></div>
-                <span className="text-xs sm:text-xs text-gray-600 font-medium whitespace-nowrap">
-                  Tap menu to get started →
-                </span>
+              <div className="menu-hint-pill">
+                <span className="menu-hint-dot" />
+                <span className="menu-hint-text">Tap menu to get started</span>
               </div>
             </motion.div>
           )}
