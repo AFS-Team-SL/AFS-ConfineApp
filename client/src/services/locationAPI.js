@@ -116,7 +116,7 @@ export const technicianAssignmentService = {
     try {
       // This should call the auth service to get technicians
       const authAPI = axios.create({
-        baseURL: import.meta.env.VITE_AUTH_API_URL || '/api/auth',
+        baseURL: import.meta.env.VITE_AUTH_API_URL || '/api',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

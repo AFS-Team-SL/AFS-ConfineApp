@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Get base URLs from environment variables, fallback to relative paths for development
-const getAuthBaseURL = () => import.meta.env.VITE_AUTH_API_URL || '/api/auth';
+const getAuthBaseURL = () => import.meta.env.VITE_AUTH_API_URL || '/api';
 const getLocationBaseURL = () => import.meta.env.VITE_LOCATION_API_URL || '/api/location';
 
 // Create axios instance for auth service (where users/technicians are managed)

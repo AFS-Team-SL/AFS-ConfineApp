@@ -52,7 +52,7 @@ const ManagerDashboard = () => {
         // Parallel API calls for better performance
         const [workOrdersRes, userStatsRes] = await Promise.allSettled([
           workOrderAPI.getManagerWorkOrders(token, 1, 100),
-          fetch(`${import.meta.env.VITE_AUTH_API_URL || '/api/auth'}/users/stats`, {
+          fetch(`${import.meta.env.VITE_AUTH_API_URL || '/api'}/users/stats`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
