@@ -6,6 +6,18 @@ const getBaseURL = () => {
   return envBaseUrl.replace(/\/$/, '');
 };
 
+const getLoginPath = () => {
+  const rawEndpoint = (import.meta.env.VITE_AUTH_LOGIN_ENDPOINT || '/api/v1/auth/login').trim();
+  const normalizedEndpoint = rawEndpoint.startsWith('/') ? rawEndpoint : `/${rawEndpoint}`;
+
+  // Prevent /api/api/... when baseURL already ends with /api.
+  if (getBaseURL().endsWith('/api') && normalizedEndpoint.startsWith('/api/')) {
+    return normalizedEndpoint.replace(/^\/api/, '');
+  }
+
+  return normalizedEndpoint;
+};
+
 // Create axios instance with default config
 const api = axios.create({
   baseURL: getBaseURL(),
@@ -103,7 +115,7 @@ api.interceptors.response.use(
 // Auth API functions
 export const authAPI = {
   login: ({ email, password }) => api.post(
-    '/login',
+    getLoginPath(),
     { email, password },
     {
       headers: {
