@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const login = useCallback(async (credentials) => {
+  const login = useCallback(async (credentials, options = {}) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       dispatch({ type: 'SET_ERROR', payload: null });
@@ -115,12 +115,16 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('user');
       sessionStorage.clear();
       
-      // Validate credentials client-side
-      if (!credentials.email || !credentials.password) {
+      // Validate and normalize credentials client-side
+      const email = credentials?.email?.trim().toLowerCase();
+      const password = credentials?.password;
+
+      if (!email || !password) {
         throw new Error('Email and password are required');
       }
-      
-      const response = await authAPI.login(credentials);
+
+      const loginPayload = { email, password };
+      const response = await authAPI.login(loginPayload);
       
       // Validate response structure
       if (!response.data?.data?.user || !response.data?.data?.token) {
@@ -143,6 +147,7 @@ export const AuthProvider = ({ children }) => {
       // Store new auth data
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('rememberMe', String(Boolean(options.rememberMe)));
 
       dispatch({
         type: 'LOGIN_SUCCESS',

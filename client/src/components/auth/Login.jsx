@@ -31,10 +31,20 @@ const Login = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      email: '',
+      password: '',
+      rememberMe: false,
+    },
   });
 
   const onSubmit = async (data) => {
-    const result = await login(data);
+    const loginPayload = {
+      email: data.email?.trim().toLowerCase(),
+      password: data.password,
+    };
+
+    const result = await login(loginPayload, { rememberMe: Boolean(data.rememberMe) });
     if (result.success) {
       const from = location.state?.from?.pathname || getDashboardRoute(result.user.role);
       navigate(from, { replace: true });
@@ -222,6 +232,7 @@ const Login = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 py-2">
               <label className="flex items-center">
                 <input
+                  {...register('rememberMe')}
                   type="checkbox"
                   className="w-4 h-4 sm:w-5 sm:h-5 rounded border-gray-300 text-[#232249] focus:ring-[#232249]/20 touch-manipulation"
                 />
